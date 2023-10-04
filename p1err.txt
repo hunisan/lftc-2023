@@ -1,0 +1,17 @@
+num a
+num b ;; this is a comment
+
+
+write "enter a number:
+;;syntax error: missing closing quotation mark
+read a
+write "enter another number"
+read b
+
+print "the maximum of the two numbers is "
+;;syntax error: unrecognized identifier print
+if a > b =>
+    write a 
+else => 
+	write b
+end

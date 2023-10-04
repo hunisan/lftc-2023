@@ -1,0 +1,21 @@
+num n
+
+read n
+
+num a, b
+a <- 1
+b <- 1
+num i <- 0
+num aux
+
+write "the first n fibonacci numbers are "
+while i < n =>
+    write a
+
+    aux <- a + b
+    a <- b
+    b <- aux
+
+    i <- i + 1
+end
+

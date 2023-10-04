@@ -1,0 +1,16 @@
+num a
+
+write "enter a="
+read a
+
+num i <- 2
+
+while i < sqrt a =>
+	if a mod i = 0 =>
+		write "the number is not a prime"
+		exit
+	end		
+end
+
+write "the number is prime"
+	

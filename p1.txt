@@ -1,0 +1,14 @@
+num a
+num b ;; this is a comment
+
+write "enter a number:
+read a
+write "enter another number"
+read b
+
+write "the maximum of the two numbers is "
+if a > b =>
+    write a
+else => 
+	write b
+end
