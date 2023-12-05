@@ -1,0 +1,24 @@
+1. Language Definition:
+ 1.1. Alphabet:
+    a. Upper (A-Z) and lower case letters (a-z) of the English alphabet
+    b. Underline character '_';
+    c. Decimal digits (0-9);
+ 1.2. Lexic:
+    a. Operators: 
+        + - / * = < <= > >= <>
+    b. Separators: 
+        ( ) [ ] { } newline space : ;
+    c. Keywords: 
+        main var Integer Float Char Boolean read write if do else end for while and or xor
+    d: Identifiers:
+        identifier := starting_character { id_character }
+        id_character := starting_character | digit
+        starting_character := letter | "_"
+        letter := "a" | "b" | ... | "z" | "A" | "B" | .. "Z"
+        digit := "0" | "1" | ... | "9"
+    e: Constants:
+        integer := digit { digit } //this language considers numbers starting with 0 valid
+        double := digit { digit } [ "." digit { digit } ]
+        character := "'" (letter | digit) "'"
+        string := '"' { (letter | digit) } '"'
+        boolean := "True" | "False

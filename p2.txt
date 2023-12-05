@@ -13,4 +13,4 @@ while i < sqrt a =>
 end
 
 write "the number is prime"
-	
+
