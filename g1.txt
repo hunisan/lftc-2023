@@ -1,5 +1,5 @@
-S -> A B | C D
-A -> a
-B -> b
-C -> c
-D -> d | ε
+S -> Expression
+Expression -> Term + Expression | Term - Expression | Term
+Term -> Factor * Term | Factor / Term | Factor
+Factor -> ( Expression ) | Number
+Number -> digit

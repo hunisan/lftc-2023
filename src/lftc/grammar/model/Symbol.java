@@ -37,4 +37,10 @@ public class Symbol
     {
         return Objects.hash(identifier);
     }
+
+    @Override
+    public String toString()
+    {
+        return identifier;
+    }
 }

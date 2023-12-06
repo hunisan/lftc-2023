@@ -13,7 +13,7 @@ import lftc.grammar.Grammar;
 import lftc.grammar.model.Production;
 import lftc.grammar.model.Symbol;
 
-public class Menu
+public class ParserMenu
 {
     private Grammar grammar;
 

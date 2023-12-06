@@ -89,10 +89,31 @@ public class Grammar
         this.nonTerminals = nonTerminals;
     }
 
+    public List<Production> getProductionsOfNonTerminal(Symbol symbol)
+    {
+        return getProductionsOfNonTerminal(symbol.identifier);
+    }
+
     public List<Production> getProductionsOfNonTerminal(String nonTerminal)
     {
         return productions.stream()
             .filter(production -> production.getLeftHandSide().contains(new Symbol(nonTerminal)))
             .collect(Collectors.toList());
+    }
+
+    public Symbol getStartingSymbol()
+    {
+        //Assume the first is the start
+        return productions.get(0).getLeftHandSide().get(0);
+    }
+
+    public boolean isNonTerminal(Symbol symbol)
+    {
+        return nonTerminals.contains(symbol);
+    }
+
+    public boolean isTerminal(Symbol symbol)
+    {
+        return terminals.contains(symbol);
     }
 }
