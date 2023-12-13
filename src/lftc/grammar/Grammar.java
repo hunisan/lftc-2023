@@ -56,6 +56,19 @@ public class Grammar
             }
         }
 
+        for (Symbol terminal : terminals)
+        {
+            var p = productions.stream()
+                .filter(production -> production.getRightHandSide().size() == 1
+                    && production.getRightHandSide().get(0).equals(terminal)).count();
+
+            if (p > 1)
+            {
+                return false;
+            }
+
+        }
+
         return true;
     }
 

@@ -2,4 +2,4 @@ S -> Expression
 Expression -> Term + Expression | Term - Expression | Term
 Term -> Factor * Term | Factor / Term | Factor
 Factor -> ( Expression ) | Number
-Number -> digit
+Number -> CONSTANT

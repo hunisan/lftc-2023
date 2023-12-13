@@ -76,15 +76,18 @@ public class Scanner
         else if(identifierFiniteAutomata.checkSequence(newToken))
         {
             tokenType = TokenType.IDENTIFIER;
+            newToken = "IDENTIFIER";
+            //TODO add to Symbol Table
         }
         else if(numericalConstantFiniteAutomata.checkSequence(newToken))
         {
             tokenType = TokenType.NUMERIC_CONSTANT;
+            newToken = "CONSTANT";
+            //TODO add to Symbol Table
         }
         else
         {
-            throw new RuntimeException(String.format("Lexical error! Invalid token %s at line %s col %s!",
-                newToken, currentLineNumber, startPositionOfNewToken - lastNewLinePosition));
+            throw new LexicalError(newToken, currentLineNumber, startPositionOfNewToken - lastNewLinePosition);
         }
 
         return new Token(tokenType, newToken, currentLineNumber, startPositionOfNewToken - lastNewLinePosition);

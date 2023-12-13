@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import lftc.grammar.Grammar;
 import lftc.grammar.model.Production;
 import lftc.grammar.model.Symbol;
+import lftc.scanner.LexicalError;
 import lftc.scanner.Scanner;
 import lftc.scanner.Token;
 import lftc.scanner.TokenType;
@@ -29,21 +30,28 @@ public class RecursiveDescentParser implements Parser
         Token token = scanner.getNextToken();
         List<Token> tokens = new ArrayList<>();
 
-        while(token.getTokenType() != TokenType.EOF)
+        try
         {
-            tokens.add(token);
-            token = scanner.getNextToken();
+            while(token.getTokenType() != TokenType.EOF)
+            {
+                tokens.add(token);
+                token = scanner.getNextToken();
+            }
+
+            List<Symbol> symbols = tokens.stream()
+                .map(Token::getValue)
+                .map(Symbol::new)
+                .collect(Collectors.toList());
+
+            parse(symbols);
         }
-
-        List<Symbol> symbols = tokens.stream()
-            .map(Token::getValue)
-            .map(Symbol::new)
-            .collect(Collectors.toList());
-
-        parse(symbols);
+        catch(LexicalError lexicalError)
+        {
+            System.out.println(lexicalError.getMessage());
+        }
     }
 
-    //TODO maybe change to use tokens
+    //TODO change to use tokens
     public void parse(List<Symbol> inputSequence)
     {
         int n = inputSequence.size();
@@ -51,9 +59,9 @@ public class RecursiveDescentParser implements Parser
         ParserConfiguration config = new ParserConfiguration(grammar.getStartingSymbol());
         while (config.s != ParsingState.FINAL && config.s != ParsingState.ERROR)
         {
-            System.out.println("alfa:"+config.alfa.stream().map(Gamma::toString).collect(Collectors.joining(",")));
-            System.out.println("beta:"+config.beta.stream().map(Gamma::toString).collect(Collectors.joining(",")));
-            System.out.println("");
+            //System.out.println("alfa:"+config.alfa.stream().map(Gamma::toString).collect(Collectors.joining(",")));
+            //System.out.println("beta:"+config.beta.stream().map(Gamma::toString).collect(Collectors.joining(",")));
+            //System.out.println("");
             if (config.s == ParsingState.NORMAL)
             {
                 if (config.i == n && config.beta.isEmpty())
@@ -93,7 +101,7 @@ public class RecursiveDescentParser implements Parser
 
         if(config.s == ParsingState.ERROR)
         {
-            System.out.println("Parser error!");
+            System.out.println("Syntax error! Provided sequence is not correct");
         }
         else
         {
@@ -101,12 +109,12 @@ public class RecursiveDescentParser implements Parser
         }
     }
 
-    private void success(ParserConfiguration config)
+    public void success(ParserConfiguration config)
     {
         config.s = ParsingState.FINAL;
     }
 
-    private void expand(ParserConfiguration config)
+    public void expand(ParserConfiguration config)
     {
         Gamma g = config.beta.pop();
         Symbol nonTerminal = g.symbol;
@@ -118,36 +126,35 @@ public class RecursiveDescentParser implements Parser
         for(int i = production.getRightHandSide().size() - 1 ; i >= 0; i--)
         {
             config.beta.push(new Gamma(production.getRightHandSide().get(i), 0));
-            //TODO what index?
         }
     }
 
-    private void advance(ParserConfiguration config)
+    public void advance(ParserConfiguration config)
     {
-        System.out.println("Advance!");
+        //System.out.println("Advance!");
         Gamma g = config.beta.pop();
         Symbol terminal = g.symbol;
         config.i++;
 
-        config.alfa.push(new Gamma(terminal, null));
+        config.alfa.push(new Gamma(terminal, 0));
     }
 
-    private void momentaryInsuccess(ParserConfiguration config)
+    public void momentaryInsuccess(ParserConfiguration config)
     {
         config.s = ParsingState.BACK;
     }
 
-    private void back(ParserConfiguration config)
+    public void back(ParserConfiguration config)
     {
         Gamma g = config.alfa.pop();
         config.i--;
         config.beta.push(g);
     }
 
-    private void anotherTry(ParserConfiguration config)
+    public void anotherTry(ParserConfiguration config)
     {
         Gamma headOfWorkingStack = config.alfa.peek();
-        Gamma headOfInputStack = config.beta.peek();
+
         Symbol nonTerminal = headOfWorkingStack.symbol;
 
         List<Production> productions = grammar.getProductionsOfNonTerminal(headOfWorkingStack.symbol);
@@ -165,7 +172,6 @@ public class RecursiveDescentParser implements Parser
             for(int i = newProduction.getRightHandSide().size() - 1 ; i >= 0; i--)
             {
                 config.beta.push(new Gamma(newProduction.getRightHandSide().get(i), 0));
-                //TODO what index?
             }
 
 
@@ -187,7 +193,6 @@ public class RecursiveDescentParser implements Parser
                     config.beta.pop();
                 }
                 config.beta.push(new Gamma(nonTerminal, 0));
-                //TODO 0 or null
             }
         }
     }

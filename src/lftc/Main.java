@@ -97,11 +97,9 @@ public class Main
     public static void main(String[] args) throws IOException
     {
         //scannerTest();
-        parserTest();
+        //parserTest();
         //new FiniteAutomataMenu().run();
 
-        var menu = new ParserMenu();
-
-        //menu.run();
+        new ParserMenu().run();
     }
 }

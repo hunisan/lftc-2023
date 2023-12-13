@@ -21,4 +21,12 @@ public class ParserConfiguration
         beta = new Stack<>();
         beta.add(new Gamma(startingSymbol, 0));
     }
+
+    public ParserConfiguration(ParsingState s, int i, Stack<Gamma> alfa, Stack<Gamma> beta)
+    {
+        this.s = s;
+        this.i = i;
+        this.alfa = alfa;
+        this.beta = beta;
+    }
 }
