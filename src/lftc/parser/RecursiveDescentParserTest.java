@@ -38,7 +38,7 @@ public class RecursiveDescentParserTest
         // A -> c
 
         grammar = new Grammar(productions, terminals, nonTerminals);
-        recursiveDescentParser = new RecursiveDescentParser(grammar, null);
+        recursiveDescentParser = new RecursiveDescentParser(grammar, null, null);
     }
     @Test
     public void testAdvance()

@@ -8,6 +8,7 @@ public class ParserConfiguration
 {
     public ParsingState s;
     public int i;
+    public int maxi;
     //alfa/ working stack
     //beta/ input stack
     public Stack<Gamma> alfa;
@@ -17,6 +18,7 @@ public class ParserConfiguration
     {
         s = ParsingState.NORMAL;
         i = 0;
+        maxi = 0;
         alfa = new Stack<>();
         beta = new Stack<>();
         beta.add(new Gamma(startingSymbol, 0));

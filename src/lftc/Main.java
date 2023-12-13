@@ -5,14 +5,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lftc.grammar.Grammar;
+import lftc.grammar.model.Symbol;
 import lftc.parser.RecursiveDescentParser;
 import lftc.scanner.Scanner;
 import lftc.scanner.Token;
 import lftc.scanner.TokenType;
-import lftc.ui.FiniteAutomataMenu;
-import lftc.ui.ParserMenu;
 
 public class Main
 {
@@ -50,7 +50,7 @@ public class Main
             String line;
             while ((line = br.readLine()) != null)
             {
-                result = result.concat(line);
+                result = result.concat(" " + line);
             }
         }
         catch (IOException e)
@@ -84,12 +84,26 @@ public class Main
     private static void parserTest() throws IOException
     {
         List<String> reservedKeywords =
-            readLinesFromFile("SimpleToken.in");
+            readLinesFromFile("Token.in");
+
+        String inputString = readFromFile("program.txt");
+        var scanner = new Scanner(inputString, reservedKeywords);
+        var grammar = Grammar.fromLines(readLinesFromFile("SyntaxAdapted.in"));
+        var parser = new RecursiveDescentParser(grammar, scanner, "out2.txt");
+
+        parser.parse();
+    }
+
+    private static void parserTestSimple() throws IOException
+    {
 
         String inputString = readFromFile("seq.txt");
-        var scanner = new Scanner(inputString, reservedKeywords);
         var grammar = Grammar.fromLines(readLinesFromFile("g1.txt"));
-        var parser = new RecursiveDescentParser(grammar, scanner);
+        var scanner = new Scanner(inputString,
+            grammar.getTerminals().stream()
+            .map(Symbol::getIdentifier)
+            .collect(Collectors.toList()));
+        var parser = new RecursiveDescentParser(grammar, scanner, "out1.txt");
 
         parser.parse();
     }
@@ -97,9 +111,11 @@ public class Main
     public static void main(String[] args) throws IOException
     {
         //scannerTest();
-        //parserTest();
+        parserTest();
+
+        //parserTestSimple();
         //new FiniteAutomataMenu().run();
 
-        new ParserMenu().run();
+        //new ParserMenu().run();
     }
 }

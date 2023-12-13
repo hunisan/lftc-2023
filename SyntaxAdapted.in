@@ -1,0 +1,26 @@
+program -> declaration_list main statement_list
+statement_list -> statement | statement statement_list
+declaration_list -> declaration | declaration declaration_list
+statement -> simple_statement | structural_statement
+simple_statement -> declaration | assignment | io_statement
+declaration -> var IDENTIFIER : type
+type -> Integer
+assignment -> IDENTIFIER <- expression
+io_statement -> read_statement | write_statement
+read_statement -> read variable
+write_statement -> write expression
+expression -> term math_operator1 expression | term
+term -> factor math_operator2 term | factor
+factor -> IDENTIFIER | CONSTANT
+math_operator1 -> + | -
+math_operator2 -> / | *
+structural_statement -> if_statement | for_statement | while_statement
+if_statement -> simple_if_statement end | simple_if_statement else_statement end
+simple_if_statement -> if condition do statement_list
+else_statement -> else do statement_list
+for_statement -> for IDENTIFIER = expression , expression , expression do statement_list end
+while_statement -> while condition do statement_list end
+condition -> logical_expression | logical expression logical_operator condition
+logical_expression -> expression | expression relation logical_expression
+relation -> < | <= | = | <> | >= | >
+logical_operator -> and | or | xor

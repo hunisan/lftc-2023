@@ -2,8 +2,6 @@ package lftc.scanner;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import lftc.finiteautomata.FiniteAutomata;
 import lftc.finiteautomata.IdentifierFiniteAutomata;

@@ -1,0 +1,14 @@
+var a : Integer
+var b : Integer
+main
+a <- 1
+b <- 1230
+
+
+write a + b
+
+if a = 1 do
+    write 1
+else do
+    write 0
+end

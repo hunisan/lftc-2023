@@ -1,5 +1,8 @@
 package lftc.parser;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,11 +20,13 @@ public class RecursiveDescentParser implements Parser
 {
     private final Grammar grammar;
     private final Scanner scanner;
+    private final String outputFile;
 
-    public RecursiveDescentParser(Grammar grammar, Scanner scanner)
+    public RecursiveDescentParser(Grammar grammar, Scanner scanner, String outputFile)
     {
         this.grammar = grammar;
         this.scanner = scanner;
+        this.outputFile = outputFile;
     }
 
     @Override
@@ -51,24 +56,25 @@ public class RecursiveDescentParser implements Parser
         }
     }
 
-    //TODO change to use tokens
     public void parse(List<Symbol> inputSequence)
     {
         int n = inputSequence.size();
-
         ParserConfiguration config = new ParserConfiguration(grammar.getStartingSymbol());
         while (config.s != ParsingState.FINAL && config.s != ParsingState.ERROR)
         {
-            //System.out.println("alfa:"+config.alfa.stream().map(Gamma::toString).collect(Collectors.joining(",")));
-            //System.out.println("beta:"+config.beta.stream().map(Gamma::toString).collect(Collectors.joining(",")));
-            //System.out.println("");
+            System.out.println("alfa:"+config.alfa.stream().map(Gamma::toString).collect(Collectors.joining(",")));
+            System.out.println("beta:"+config.beta.stream().map(Gamma::toString).collect(Collectors.joining(",")));
+            System.out.println("i :"+config.i);
+            System.out.println("s :"+config.s);
+            System.out.println("");
+
             if (config.s == ParsingState.NORMAL)
             {
                 if (config.i == n && config.beta.isEmpty())
                 {
                     success(config);
                 }
-                else if(config.beta.isEmpty()) //is this correct?
+                else if(config.beta.isEmpty())
                 {
                     momentaryInsuccess(config);
                 }
@@ -101,11 +107,50 @@ public class RecursiveDescentParser implements Parser
 
         if(config.s == ParsingState.ERROR)
         {
-            System.out.println("Syntax error! Provided sequence is not correct");
+            System.out.println("Syntax error! Unexpected token " + inputSequence.get(config.maxi));
+            //TODO add line and col information
         }
         else
         {
             System.out.println("Syntax correct!");
+
+            writeOutputFile(config);
+        }
+    }
+
+    private void writeOutputFile(ParserConfiguration config)
+    {
+        if(outputFile == null)
+        {
+            return;
+        }
+
+        try
+        {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+
+            /*writer.write(config.alfa.stream()
+                .filter(g -> grammar.isNonTerminal(g.symbol))
+                .map(Gamma::toString)
+                .collect(Collectors.joining(",")));*/
+
+            for(Gamma g : config.alfa)
+            {
+                if(grammar.isNonTerminal(g.symbol))
+                {
+                    writer.write(g.symbol + "(" + g.productionIndex + ")\n");
+                }
+                else
+                {
+                    writer.write(g.symbol + "\n");
+                }
+            }
+
+            writer.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -135,7 +180,10 @@ public class RecursiveDescentParser implements Parser
         Gamma g = config.beta.pop();
         Symbol terminal = g.symbol;
         config.i++;
-
+        if(config.i > config.maxi)
+        {
+            config.maxi = config.i;
+        }
         config.alfa.push(new Gamma(terminal, 0));
     }
 
