@@ -1,0 +1,41 @@
+
+%{
+#include "y.tab.h"
+%}
+
+%option noyywrap
+
+LETTER  [A-Za-z]
+DIGIT   [0-9]
+NONZERO [1-9] 
+IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
+DELIMITER (:|(<-))
+OPERATOR [+-/*<>=]
+
+%%
+[ \t\n]
+
+main    { return MAIN; }
+var    { return VAR; }
+if    { return IF; }
+do    { return DO; }
+else    { return ELSE; }
+end    { return END; }
+for    { return FOR; }
+while    { return WHILE; }
+and    { return AND; }
+or    { return OR; }
+xor    { return XOR; }
+read    { return READ; }
+write    { return WRITE; }
+
+Integer { return Integer; }
+
+0   { return CONSTANT; }
+{NONZERO}{DIGIT}*   { return CONSTANT; }
+{IDENTIFIER}  { return IDENTIFIER; }
+
+{DELIMITER} { return yytext[0]; }
+{OPERATOR} { return yytext[0]; }
+
+%%

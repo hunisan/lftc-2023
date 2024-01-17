@@ -1,0 +1,53 @@
+
+
+%option noyywrap
+
+LETTER  [A-Za-z]
+DIGIT   [0-9]
+NONZERO [1-9] 
+IDENTIFIER  {LETTER}({LETTER}|{DIGIT})*
+DELIMITER (:|(<-))
+OPERATOR [+-/*<>=]
+
+%%
+[ \t\n]
+
+main    { printf("MAIN\n");}
+var    { printf("VAR\n");}
+if    { printf("IF\n");}
+do    { printf("DO\n");}
+else    { printf("ELSE\n");}
+end    { printf("END\n");}
+for    { printf("FOR\n");}
+while    { printf("WHILE\n");}
+and    { printf("AND\n");}
+or    { printf("OR\n");}
+xor    { printf("XOR\n");}
+read    { printf("READ\n");}
+write    { printf("WRITE\n");}
+
+Integer { printf("Integer\n");}
+
+0   { printf("CONSTANT\n");}
+{NONZERO}{DIGIT}*   { printf("CONSTANT\n");}
+{IDENTIFIER}  { printf("IDENTIFIER\n");}
+
+{DELIMITER} { printf("yytext[0]\n");}
+{OPERATOR} { printf("yytext[0]\n");}
+
+. { printf("Lexical Error! Invalid token %s\n",yytext);
+    return -1; };
+
+%%
+
+main( argc, argv ) 
+int argc; 
+char **argv; 
+{ 
+    if ( argc > 1 ) 
+        yyin = fopen( argv[1], "r" ); 
+    else 
+        yyin = stdin; 
+    if(!yylex())
+        printf("Lexically correct!");
+} 
